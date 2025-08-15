@@ -5,6 +5,8 @@ from typing import List
 import time
 from urllib.parse import urlparse
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 # Page configuration
 st.set_page_config(
@@ -120,6 +122,7 @@ def remove_question(index: int):
         st.rerun()
 
 def process_document():
+    
     """Process the document and get answers"""
     if not st.session_state.pdf_url or not st.session_state.pdf_url.strip():
         st.error("Please enter a valid PDF URL")
@@ -149,7 +152,7 @@ def process_document():
         
         # Make API call to your FastAPI backend
         # You'll need to update this URL to match your backend
-        api_url = "http://localhost:8000/DocLens"
+        api_url = os.getenv("BACKEND_DOCLENS_API_URL")
         
         with st.spinner("Processing document and generating answers..."):
             response = requests.post(api_url, json=payload, timeout=120)
@@ -180,47 +183,47 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Sidebar for configuration
-with st.sidebar:
-    st.header("⚙️ Configuration")
+# with st.sidebar:
+#     st.header("⚙️ Configuration")
     
-    # Backend URL configuration
-    st.subheader("Backend Settings")
-    backend_url = st.text_input(
-        "Backend URL",
-        value="http://localhost:8000",
-        help="URL of your FastAPI backend"
-    )
+#     # Backend URL configuration
+#     st.subheader("Backend Settings")
+#     backend_url = st.text_input(
+#         "Backend URL",
+#         value="https://doc-lens-three.vercel.app/",
+#         help="URL of your FastAPI backend"
+#     )
     
-    # API Key (if needed)
-    api_key = st.text_input(
-        "API Key (Optional)",
-        type="password",
-        help="API key for authentication (if required)"
-    )
+#     # API Key (if needed)
+#     api_key = st.text_input(
+#         "API Key (Optional)",
+#         type="password",
+#         help="API key for authentication (if required)"
+#     )
     
-    st.divider()
+#     st.divider()
     
-    # Information about the project
-    st.subheader("ℹ️ About DocLens")
-    st.markdown("""
-    DocLens uses advanced AI technology to:
-    - Extract text from PDF documents
-    - Create semantic embeddings
-    - Answer questions using RAG
-    - Provide accurate, context-aware responses
-    """)
+#     # Information about the project
+#     st.subheader("ℹ️ About DocLens")
+#     st.markdown("""
+#     DocLens uses advanced AI technology to:
+#     - Extract text from PDF documents
+#     - Create semantic embeddings
+#     - Answer questions using RAG
+#     - Provide accurate, context-aware responses
+#     """)
     
-    # Status indicator
-    st.subheader("🔍 Backend Status")
-    try:
-        health_response = requests.get(f"{backend_url}/health", timeout=5)
-        if health_response.status_code == 200:
-            st.success("✅ Backend Connected")
-        else:
-            st.error("❌ Backend Error")
-    except:
-        st.error("❌ Backend Unreachable")
-        st.info("Make sure your FastAPI backend is running")
+#     # Status indicator
+#     st.subheader("🔍 Backend Status")
+#     try:
+#         health_response = requests.get(f"{backend_url}/health", timeout=5)
+#         if health_response.status_code == 200:
+#             st.success("✅ Backend Connected")
+#         else:
+#             st.error("❌ Backend Error")
+#     except:
+#         st.error("❌ Backend Unreachable")
+#         st.info("Make sure your FastAPI backend is running")
 
 # Main content area
 col1, col2 = st.columns([2, 1])
