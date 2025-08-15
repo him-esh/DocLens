@@ -436,11 +436,8 @@ if __name__ == "__main__":
     
     if not os.getenv("API_KEY"):
         logger.warning("API_KEY environment variable not set. Authentication will be disabled.")
-    
     uvicorn.run(
         "main:app",  # Replace 'main' with your filename if different
-        host="0.0.0.0",
-        port=8000,
         reload=True,
         log_level="info"
     )
